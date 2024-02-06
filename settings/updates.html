@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>easy®️ store</title>
+    <link rel="stylesheet" href="../assets/index.css">
+    <link rel="stylesheet" href="../assets/loader.css">
+</head>
+<body class="theme-default">
+    <div class="frame">
+        <div class="left">
+            <a><b>easy®️ store</b> stable <a id="easy-static-easystoreversion"></a></a>
+        </div>
+        <div class="right">
+            <div class="btn-frame btn-minimize-window" id="easy-action-minimize">_</div>
+            <div class="btn-frame btn-close-window" id="easy-action-close"><i class="fa-solid fa-xmark"></i></div>
+        </div>
+    </div>
+    <div class="settings-overlay">
+        <div class="leftbar">
+            <img src="../assets/logo.png" alt="easy logo" width="128" height="128" class="logo">
+            <div class="navigation">
+                <a class="settings-category profile">PROFILE</a>
+                <a class="btn btn-nav" href="./account.html">
+                    Account
+                </a>
+                <a class="btn btn-nav" href="./logout.html">
+                    Logout
+                </a>
+
+                <a class="settings-category app">APP</a>
+                <a class="btn btn-nav" href="./appearance.html">
+                    Appearance
+                </a>
+                <a class="btn btn-nav active" href="./updates.html">
+                    Updates
+                </a>
+                <hr width="175">
+                <a class="settings-info">easy-store/latest</a><br>
+                <a class="settings-info">Stable <a id="easy-static-easystoreversion2"></a></a>
+                <hr width="175">
+                <a class="settings-info">Made with 💜 by xKotelek</a>
+                <hr width="175">
+                <a class="btn btn-nav" style="cursor:pointer;" onclick="closeSettings();"><i class="fa-solid fa-xmark"></i> Close</a>
+            </div>
+        </div>
+        <div class="tab-title" style="transform: translate(-192.5%, -525%);">
+            <a>Updates</a>
+        </div>
+        <div class="inner no-update" style="width:400px;transform:translate(-30%, -50%);">
+            <h2 class="status" style="position: relative;left:-115px;top:-15px;">You're all caught up!</h2>
+            <h3 class="desc" style="opacity:1;position: relative;left:-50px;top:-30px;color:var(--nav-btn-hover-color);">You're running the latest version there is!</h3>
+            <h3 class="icon" style="opacity:1;position: relative;left:180px;margin-top:-90px;color:1px solid var(--nav-btn-hover-color);"><i class="fa-solid fa-check"></i></h3><br>
+            <center><a onclick="updateCheck();" class="btn btn-nav updatecheck" style="cursor:pointer;width:250px;font-size:23px;">Check for updates</a></center>
+        </div>
+    </div>
+    <script>
+        var currentEasyVersion;
+        currentEasyVersion = '1.0.01';
+
+        function jsonRequest(url) {
+            return fetch(url).then(function(response) {
+                return response.json();
+            }).catch(function(err) {
+                console.log('Fetch Error :-S', err);
+                throw err;
+            });
+        }
+
+        function installUpdate() {
+            window.electron.update();
+        }
+
+        function updateCheck() {
+            updateBtn = document.querySelector('.btn.btn-nav.updatecheck');
+            updateStatusText = document.querySelector('.status');
+            updateIcon = document.querySelector('.icon');
+            updateDescText = document.querySelector('.desc');
+            updateBtn.disabled = true;
+            jsonRequest('https://easy.kotelek.dev/packages/')
+                .then(function(data) {
+                    console.log(data);
+                    var json_version = data.easy_store_version;
+                    if(json_version > currentEasyVersion) {
+                        updateStatusText.innerHTML = 'Downloading update...';
+                        updateStatusText.style.left = '-100px';
+                        updateIcon.style.opacity = '0';
+                        updateDescText.style.opacity = '0';
+                        updateBtn.innerHTML = 'Downloading update <div class="spinner center"><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div><div class="spinner-blade"></div></div>';
+                        installUpdate();
+                    } else {
+                        updateBtn.innerHTML = "You're all caught up!";
+                        setTimeout(() => {
+                            updateBtn.innerHTML = 'Check for updates';
+                        }, 1000);
+                    }
+                })
+                .catch(function(err) {
+                    console.error('Error in updateCheck:', err);
+                });
+        }
+
+
+        function checkTheme() {
+            if(!localStorage.getItem("currentTheme")) {
+                localStorage.setItem("currentTheme", 'default');
+            }
+            body = document.querySelector("body");
+            body.classList.toggle("theme-default");
+            body.classList.toggle("theme-" + localStorage.getItem("currentTheme"));
+        }
+        
+        function closeSettings() {
+            settingsOverlay = document.querySelector(".settings-overlay");
+            settingsOverlay.classList.toggle("hidden-top");
+            setTimeout(() => {
+                window.location.href = "../index.html";
+            }, 500);
+        }
+
+        function logout() {
+            localStorage.setItem('userData', null);
+            localStorage.setItem('isLogged', false);
+            window.location.href="../login.html";
+        }
+
+        if(localStorage.getItem("userData") && localStorage.getItem("isLogged") && localStorage.getItem("isLogged") === "true") {
+            settingsOverlay = document.querySelector(".settings-overlay");
+
+            checkTheme()
+
+            window.onload = function() {
+                versionText = document.getElementById("easy-static-easystoreversion");
+                versionText2 = document.getElementById("easy-static-easystoreversion2");
+                versionText.innerHTML = '1.0.01';
+                versionText2.innerHTML = '1.0.01';
+                updateCheck()
+            }
+
+            minBtn = document.getElementById("easy-action-minimize");
+            minBtn.addEventListener("click", function (e) {
+                window.electron.minimize();
+            });
+
+            closeBtn = document.getElementById("easy-action-close");
+            closeBtn.addEventListener("click", function (e) {
+                window.electron.close();
+            });
+        }
+    </script>
+    <script src="https://kit.fontawesome.com/681f16d40f.js" crossorigin="anonymous"></script>
+</body>
+</html>

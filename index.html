@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>easy®️ store</title>
+    <link rel="stylesheet" href="./assets/index.css">
+</head>
+<body class="theme-default">
+    <div class="frame">
+        <div class="left">
+            <a><b>easy®️ store</b> stable <a id="easy-static-easystoreversion"></a></a>
+        </div>
+        <div class="right">
+            <div class="btn-frame btn-minimize-window" id="easy-action-minimize">_</div>
+            <div class="btn-frame btn-close-window" id="easy-action-close"><i class="fa-solid fa-xmark"></i></div>
+        </div>
+    </div>
+    <div class="loader hidden">
+        <div class="inner">
+            <div class="loading-anim"></div>
+            <a class="loading-text">Preparing easy®️ store!</a>
+        </div>
+    </div>
+    <div class="container">
+        <div class="leftbar hidden-left">
+            <img src="./assets/logo.png" alt="easy logo" width="128" height="128" class="logo">
+            <div class="navigation">
+                <a class="btn btn-nav active" href="index.html">
+                    <i class="fa-solid fa-house"></i> Home
+                </a>
+                <a class="btn btn-nav" href="search.html">
+                    <i class="fa-solid fa-magnifying-glass"></i> Search
+                </a>
+                <a class="btn btn-nav" href="packages.html">
+                    <i class="fa-solid fa-cube"></i> Packages
+                </a>
+            </div>
+            <div class="bottom-acc">
+                <hr width="175">
+                <img src="" width="48" height="48" alt="your avatar">
+                <a class="user-name"></a>
+                <a class="btn btn-settings" style="cursor:pointer;" href="./settings/account.html" onclick="localStorage.setItem('animateSettings', 'true');"><i class="fa-solid fa-gear"></i></a>
+            </div>
+        </div>
+    </div>
+    <script>
+        function checkTheme() {
+            if(!localStorage.getItem("currentTheme")) {
+                localStorage.setItem("currentTheme", 'default');
+            }
+            body = document.querySelector("body");
+            body.classList.toggle("theme-default");
+            body.classList.toggle("theme-" + localStorage.getItem("currentTheme"));
+        }
+        
+        function setUserAvatar(imgElement) {
+            const userData = JSON.parse(localStorage.getItem("userData"));
+
+            if (userData && userData.avatar) {
+                imgElement.src = userData.avatar;
+            }
+        }
+
+        function setUserName(nameElement) {
+            const userData = JSON.parse(localStorage.getItem("userData"));
+
+            if (userData && userData.name) {
+                nameElement.textContent = userData.name;
+            }
+        }
+
+        if(localStorage.getItem("userData") && localStorage.getItem("isLogged") && localStorage.getItem("isLogged") === "true") {
+            loader = document.querySelector(".loader");
+            leftBars = document.querySelectorAll(".leftbar");
+
+            checkTheme()
+
+            window.onload = function() {
+                versionText = document.getElementById("easy-static-easystoreversion");
+                versionText.innerHTML = '1.0.01';
+
+                setTimeout(() => {
+                    loader.classList.toggle("hidden");
+                    leftBars.forEach(leftBar => leftBar.classList.remove("hidden-left"));
+                }, 1000);
+
+                localStorage.setItem('animateSettings', 'true')
+            }
+
+            setUserAvatar(document.querySelector(".bottom-acc img"));
+            setUserName(document.querySelector(".bottom-acc .user-name"));
+
+            minBtn = document.getElementById("easy-action-minimize");
+            minBtn.addEventListener("click", function (e) {
+                window.electron.minimize();
+            });
+
+            closeBtn = document.getElementById("easy-action-close");
+            closeBtn.addEventListener("click", function (e) {
+                window.electron.close();
+            });
+
+            setTimeout(() => {
+                    loader.classList.toggle("hidden");
+            }, 1);
+        } else {
+            window.location.href = "login.html";
+        }
+    </script>
+    <script src="https://kit.fontawesome.com/681f16d40f.js" crossorigin="anonymous"></script>
+</body>
+</html>

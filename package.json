@@ -1,0 +1,32 @@
+{
+  "name": "easy-store",
+  "version": "1.0.0",
+  "description": "easy store - an graphical interface for easy cli",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "keywords": [
+    "easy"
+  ],
+  "author": "xKotelek",
+  "license": "MIT",
+  "dependencies": {
+    "husky": "^9.0.10",
+    "shell": "^0.5.1"
+  },
+  "devDependencies": {
+    "electron-builder": "^24.9.1"
+  },
+  "build": {
+    "appId": "com.easy.store",
+    "productName": "easy store",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "portable"
+    }
+  }  
+}

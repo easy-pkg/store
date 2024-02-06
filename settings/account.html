@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>easy®️ store</title>
+    <link rel="stylesheet" href="../assets/index.css">
+</head>
+<body class="theme-default">
+    <div class="frame">
+        <div class="left">
+            <a><b>easy®️ store</b> stable <a id="easy-static-easystoreversion"></a></a>
+        </div>
+        <div class="right">
+            <div class="btn-frame btn-minimize-window" id="easy-action-minimize">_</div>
+            <div class="btn-frame btn-close-window" id="easy-action-close"><i class="fa-solid fa-xmark"></i></div>
+        </div>
+    </div>
+    <div class="settings-overlay">
+        <div class="leftbar">
+            <img src="../assets/logo.png" alt="easy logo" width="128" height="128" class="logo">
+            <div class="navigation">
+                <a class="settings-category profile">PROFILE</a>
+                <a class="btn btn-nav active" href="./account.html">
+                    Account
+                </a>
+                <a class="btn btn-nav" href="./logout.html">
+                    Logout
+                </a>
+
+                <a class="settings-category app">APP</a>
+                <a class="btn btn-nav" href="./appearance.html">
+                    Appearance
+                </a>
+                <a class="btn btn-nav" href="./updates.html">
+                    Updates
+                </a>
+                <hr width="175">
+                <a class="settings-info">easy-store/latest</a><br>
+                <a class="settings-info">Stable <a id="easy-static-easystoreversion2"></a></a>
+                <hr width="175">
+                <a class="settings-info">Made with 💜 by xKotelek</a>
+                <hr width="175">
+                <a class="btn btn-nav" style="cursor:pointer;" onclick="closeSettings();"><i class="fa-solid fa-xmark"></i> Close</a>
+            </div>
+        </div>
+        <div class="tab-title">
+            <a>Account</a>
+        </div>
+        <div class="inner" id="your-account" style="height:25px;">
+            <div style="margin-top:-10px;">
+                <img src="../assets/logo.png" style="left:-40px;" width="48" height="48" alt="your avatar">
+                <a class="user-name" style="left:-25px;"></a>
+                <a class="btn btn-danger" style="cursor:pointer;position:relative;top:-40px;margin-left:125px;" href="./logout.html"><i class="fa-solid fa-right-from-bracket"></i></a>
+            </div>
+        </div>
+    </div>
+    <script>
+        settingsOverlay = document.querySelector(".settings-overlay");
+        function checkTheme() {
+            if(!localStorage.getItem("currentTheme")) {
+                localStorage.setItem("currentTheme", 'default');
+            }
+            body = document.querySelector("body");
+            body.classList.toggle("theme-default");
+            body.classList.toggle("theme-" + localStorage.getItem("currentTheme"));
+        }
+
+        function closeSettings() {
+            settingsOverlay = document.querySelector(".settings-overlay");
+            settingsOverlay.classList.toggle("hidden-top");
+            setTimeout(() => {
+                window.location.href = "../index.html";
+            }, 500);
+        }
+
+        function setUserAvatar(imgElement) {
+            const userData = JSON.parse(localStorage.getItem("userData"));
+
+            if (userData && userData.avatar) {
+                imgElement.src = userData.avatar;
+            }
+        }
+
+        function setUserName(nameElement) {
+            const userData = JSON.parse(localStorage.getItem("userData"));
+
+            if (userData && userData.name) {
+                nameElement.textContent = userData.name;
+            }
+        }
+
+        if(localStorage.getItem("userData") && localStorage.getItem("isLogged") && localStorage.getItem("isLogged") === "true") {
+            settingsOverlay = document.querySelector(".settings-overlay");
+            checkTheme()
+
+            setUserAvatar(document.querySelector(".inner img"));
+            setUserName(document.querySelector(".inner .user-name"));
+
+            window.onload = function() {
+                versionText = document.getElementById("easy-static-easystoreversion");
+                versionText2 = document.getElementById("easy-static-easystoreversion2");
+                versionText.innerHTML = '1.0.01';
+                versionText2.innerHTML = '1.0.01';
+
+                if(localStorage.getItem("animateSettings") === 'true') {
+                    settingsOverlay.style.transitionDuration = '0s';
+                    settingsOverlay.classList.add("hidden-top");
+                    localStorage.setItem('animateSettings', 'false');
+                    setTimeout(() => {
+                        settingsOverlay.style.transitionDuration = '300ms';
+                        settingsOverlay.classList.remove("hidden-top");
+                    }, 500);
+                }
+            }
+
+            minBtn = document.getElementById("easy-action-minimize");
+            minBtn.addEventListener("click", function (e) {
+                window.electron.minimize();
+            });
+
+            closeBtn = document.getElementById("easy-action-close");
+            closeBtn.addEventListener("click", function (e) {
+                window.electron.close();
+            });
+        }
+    </script>
+    <script src="https://kit.fontawesome.com/681f16d40f.js" crossorigin="anonymous"></script>
+</body>
+</html>

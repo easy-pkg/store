@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>easy®️ store</title>
+    <link rel="stylesheet" href="../assets/index.css">
+</head>
+<body class="theme-default">
+    <div class="frame">
+        <div class="left">
+            <a><b>easy®️ store</b> stable <a id="easy-static-easystoreversion"></a></a>
+        </div>
+        <div class="right">
+            <div class="btn-frame btn-minimize-window" id="easy-action-minimize">_</div>
+            <div class="btn-frame btn-close-window" id="easy-action-close"><i class="fa-solid fa-xmark"></i></div>
+        </div>
+    </div>
+    <div class="settings-overlay">
+        <div class="leftbar">
+            <img src="../assets/logo.png" alt="easy logo" width="128" height="128" class="logo">
+            <div class="navigation">
+                <a class="settings-category profile">PROFILE</a>
+                <a class="btn btn-nav" href="./account.html">
+                    Account
+                </a>
+                <a class="btn btn-nav active" href="./logout.html">
+                    Logout
+                </a>
+
+                <a class="settings-category app">APP</a>
+                <a class="btn btn-nav" href="./appearance.html">
+                    Appearance
+                </a>
+                <a class="btn btn-nav" href="./updates.html">
+                    Updates
+                </a>
+                <hr width="175">
+                <a class="settings-info">easy-store/latest</a><br>
+                <a class="settings-info">Stable <a id="easy-static-easystoreversion2"></a></a>
+                <hr width="175">
+                <a class="settings-info">Made with 💜 by xKotelek</a>
+                <hr width="175">
+                <a class="btn btn-nav" style="cursor:pointer;" onclick="closeSettings();"><i class="fa-solid fa-xmark"></i> Close</a>
+            </div>
+        </div>
+        <div class="tab-title" style="transform: translate(-230%, -525%);">
+            <a>Logout</a>
+        </div>
+        <div class="inner">
+            Do you want to logout?<br><br>
+            <a class="btn btn-danger" style="cursor:pointer;" onclick="logout();">Yes</a> <a class="btn btn-nodanger" href="../index.html">No</a>
+        </div>
+    </div>
+    <script>
+        function checkTheme() {
+            if(!localStorage.getItem("currentTheme")) {
+                localStorage.setItem("currentTheme", 'default');
+            }
+            body = document.querySelector("body");
+            body.classList.toggle("theme-default");
+            body.classList.toggle("theme-" + localStorage.getItem("currentTheme"));
+        }
+        
+        function closeSettings() {
+            settingsOverlay = document.querySelector(".settings-overlay");
+            settingsOverlay.classList.toggle("hidden-top");
+            setTimeout(() => {
+                window.location.href = "../index.html";
+            }, 500);
+        }
+
+        function logout() {
+            localStorage.setItem('userData', null);
+            localStorage.setItem('isLogged', false);
+            window.location.href="../login.html";
+        }
+
+        if(localStorage.getItem("userData") && localStorage.getItem("isLogged") && localStorage.getItem("isLogged") === "true") {
+            settingsOverlay = document.querySelector(".settings-overlay");
+
+            checkTheme()
+
+            window.onload = function() {
+                versionText = document.getElementById("easy-static-easystoreversion");
+                versionText2 = document.getElementById("easy-static-easystoreversion2");
+                versionText.innerHTML = '1.0.01';
+                versionText2.innerHTML = '1.0.01';
+            }
+
+            minBtn = document.getElementById("easy-action-minimize");
+            minBtn.addEventListener("click", function (e) {
+                window.electron.minimize();
+            });
+
+            closeBtn = document.getElementById("easy-action-close");
+            closeBtn.addEventListener("click", function (e) {
+                window.electron.close();
+            });
+        }
+    </script>
+    <script src="https://kit.fontawesome.com/681f16d40f.js" crossorigin="anonymous"></script>
+</body>
+</html>
